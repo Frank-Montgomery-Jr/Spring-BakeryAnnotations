@@ -2,35 +2,36 @@ package com.zipcodewilmington.bakery.services;
 
 import com.zipcodewilmington.bakery.models.Baker;
 import com.zipcodewilmington.bakery.repositories.BakerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BakerService {
-    private BakerRepository repository;
-
-    public BakerService(BakerRepository repository) {
-        this.repository = repository;
-    }
-
-    public Iterable<Baker> index() {
-        return repository.findAll();
-    }
-
-    public Baker show(Long id) {
-        return repository.findById(id).get();
-    }
+    
+    @Autowired
+    private BakerRepository bakerRepository;
 
     public Baker create(Baker baker) {
-        return repository.save(baker);
+        return bakerRepository.save(baker);
+    }
+
+    public Baker read(Long id) {
+        return bakerRepository.findById(id).get();
+    }
+
+    public Iterable<Baker> readAll() {
+        return bakerRepository.findAll();
     }
 
     public Baker update(Long id, Baker newBakerData) {
-        Baker originalBaker = repository.findById(id).get();
+        Baker originalBaker = read(id);
         originalBaker.setName(newBakerData.getName());
+        originalBaker.setEmployeeId(newBakerData.getEmployeeId());
         originalBaker.setSpecialty(newBakerData.getSpecialty());
-        return repository.save(originalBaker);
+        return bakerRepository.save(originalBaker);
     }
 
-    public Boolean delete(Long id) {
-        repository.deleteById(id);
-        return true;
+    public void delete(Long id) {
+        bakerRepository.deleteById(id);
     }
 }
